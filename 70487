@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Idama.lk — Sri Lanka's Property Marketplace</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">Idama<span>.lk</span></a>
+    <nav class="links">
+      <a href="#">Buy</a>
+      <a href="#">Rent</a>
+      <a href="#">Land</a>
+      <a href="#">Commercial</a>
+    </nav>
+    <div class="header-right">
+      <a class="btn-list" href="dashboard/seller-dashboard.html">Seller Login</a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+      <label for="nav-toggle" class="nav-toggle-label" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </label>
+    </div>
+    <div class="mobile-panel">
+      <a href="#">Buy</a>
+      <a href="#">Rent</a>
+      <a href="#">Land</a>
+      <a href="#">Commercial</a>
+      <a href="dashboard/seller-dashboard.html">Seller Login</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-photo"></div>
+  <div class="hero-sheen"></div>
+  <div class="hero-particles" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="wrap">
+    <div class="hero-content">
+      <h1>Find land and property, anywhere in Sri Lanka.</h1>
+      <p>Search by province, property type and budget. Verified listings from owners and agents — for sale or for rent.</p>
+      <div class="hero-eyebrow-row">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Verified listings</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No agent fees</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>All 9 provinces</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<form class="search-card" onsubmit="return false;">
+  <div class="field">
+    <label for="province">Province</label>
+    <select id="province">
+      <option>Any province</option>
+      <option>Western</option>
+      <option>Central</option>
+      <option>Southern</option>
+      <option>Northern</option>
+      <option>Eastern</option>
+      <option>North Western</option>
+      <option>North Central</option>
+      <option>Uva</option>
+      <option>Sabaragamuwa</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="city">City / Town</label>
+    <select id="city" disabled>
+      <option>Select province first</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="type">Property type</label>
+    <select id="type">
+      <option>Any type</option>
+      <option>Land</option>
+      <option>House</option>
+      <option>Apartment</option>
+      <option>Commercial</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="price">Budget</label>
+    <select id="price">
+      <option>Any budget</option>
+      <option>Under Rs. 5M</option>
+      <option>Rs. 5M – 15M</option>
+      <option>Rs. 15M – 30M</option>
+      <option>Rs. 30M – 60M</option>
+      <option>Above Rs. 60M</option>
+    </select>
+  </div>
+  <div class="field field-perches" id="perchesField">
+    <label for="perches">Extent (perches)</label>
+    <input type="number" id="perches" min="0" placeholder="e.g. 20">
+  </div>
+  <button class="search-btn" type="submit">Search</button>
+</form>
+
+<section class="section wrap reveal">
+  <div class="section-head">
+    <span class="kicker">Just listed</span>
+    <h2>Featured properties</h2>
+    <p>A sample of what listings look like once sellers start posting.</p>
+  </div>
+  <div class="prop-grid">
+    <div class="prop-card reveal">
+      <div class="prop-photo p1"><span class="prop-tag">For Sale</span></div>
+      <div class="prop-body">
+        <div class="prop-price">Rs. 18.5M</div>
+        <div class="prop-title">2-Story House, Nugegoda</div>
+        <div class="prop-loc">Western Province</div>
+        <div class="prop-meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>4 beds</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="10" width="18" height="10" rx="1"/><path d="M7 10V7a2 2 0 012-2h6a2 2 0 012 2v3"/></svg>3 baths</span>
+        </div>
+      </div>
+    </div>
+    <div class="prop-card reveal">
+      <div class="prop-photo p2"><span class="prop-tag">For Rent</span></div>
+      <div class="prop-body">
+        <div class="prop-price">Rs. 65,000<span style="font-size:12px;color:#9AA1A7;">/mo</span></div>
+        <div class="prop-title">2BR Apartment, Rajagiriya</div>
+        <div class="prop-loc">Western Province</div>
+        <div class="prop-meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>2 beds</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="10" width="18" height="10" rx="1"/><path d="M7 10V7a2 2 0 012-2h6a2 2 0 012 2v3"/></svg>2 baths</span>
+        </div>
+      </div>
+    </div>
+    <div class="prop-card reveal">
+      <div class="prop-photo p3"><span class="prop-tag">For Sale</span></div>
+      <div class="prop-body">
+        <div class="prop-price">Rs. 4.2M</div>
+        <div class="prop-title">20-Perch Land, Kurunegala</div>
+        <div class="prop-loc">North Western Province</div>
+        <div class="prop-meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M18 8l-5 5-3-3-4 4"/></svg>20 perches</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section wrap reveal">
+  <div class="section-head">
+    <span class="kicker">Explore</span>
+    <h2>Browse by category</h2>
+    <p>Every listing on Idama.lk falls into one of these — pick where to start.</p>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg>
+      <h3>Houses</h3>
+      <p>Family homes and new builds, for sale or long-term rent.</p>
+    </div>
+    <div class="cat-card reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V3h9v18M13 21V8h7v13M4 21h16M7 7h1M7 11h1M7 15h1"/></svg>
+      <h3>Apartments</h3>
+      <p>City and suburban apartments, from studios to penthouses.</p>
+    </div>
+    <div class="cat-card reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 20h20M4 20V10l8-6 8 6v10M9 20v-5h6v5"/><path d="M12 4L2 10M12 4l10 6"/></svg>
+      <h3>Land</h3>
+      <p>Residential blocks, paddy, and agricultural land by extent.</p>
+    </div>
+    <div class="cat-card reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M6 21V4h8v17M14 21v-9h4v9M9 8h1M9 12h1M9 16h1"/></svg>
+      <h3>Commercial</h3>
+      <p>Shops, offices and warehouse space for lease or sale.</p>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Process</span>
+      <h2>How Idama.lk works</h2>
+      <p>Three steps between browsing and moving in.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="num">1</div>
+        <h3>Search by province and budget</h3>
+        <p>Narrow thousands of listings down to what actually fits where you want to live and what you can spend.</p>
+      </div>
+      <div class="step reveal">
+        <div class="num">2</div>
+        <h3>Compare verified listings</h3>
+        <p>Every listing shows real photos, extent or floor area, and a price — no guessing.</p>
+      </div>
+      <div class="step reveal">
+        <div class="num">3</div>
+        <h3>Contact the seller directly</h3>
+        <p>Message the owner or agent through Idama.lk and arrange a viewing, no middleman fee.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-strip wrap reveal">
+  <div class="cta-box">
+    <h2>Have a property to sell or rent out?</h2>
+    <a href="#">List it on Idama.lk</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#">Idama<span>.lk</span></a>
+        <p style="font-size:13.5px;max-width:240px;margin-top:8px;">Sri Lanka's property marketplace.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="#">Houses</a>
+        <a href="#">Apartments</a>
+        <a href="#">Land</a>
+        <a href="#">Commercial</a>
+      </div>
+      <div class="foot-col">
+        <h4>Idama.lk</h4>
+        <a href="#">List your property</a>
+        <a href="#">How it works</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="foot-bottom">© 2026 Idama.lk. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
