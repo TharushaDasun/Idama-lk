@@ -47,28 +47,41 @@
   }
 })();
 
-// Renders any admin-approved listings (added via the Admin Panel) into the
-// Featured Properties grid. Demo-only: uses localStorage, so it only works
-// within this same browser/site (no real backend yet).
+// Renders real listings into the Featured Properties grid, fetched live from
+// the backend (GET /api/listings?status=active). Shows a friendly empty
+// state if there are no listings yet or the API isn't reachable.
 function renderApprovedListings() {
-  var grid = document.querySelector(".prop-grid");
+  var grid = document.getElementById("propGrid");
   if (!grid) return;
-  var raw = localStorage.getItem("idama_approved_listings");
-  var listings = raw ? JSON.parse(raw) : [];
-  listings.forEach(function (item, i) {
-    var photoClass = "p" + ((i % 3) + 1);
-    var card = document.createElement("div");
-    card.className = "prop-card reveal";
-    card.innerHTML =
-      '<div class="prop-photo ' + photoClass + '"><span class="prop-tag">' + item.tag + '</span></div>' +
-      '<div class="prop-body">' +
-        '<div class="prop-price">' + item.price + '</div>' +
-        '<div class="prop-title">' + item.title + '</div>' +
-        '<div class="prop-loc">' + item.location + '</div>' +
-        '<div class="prop-meta"><span>' + item.category + '</span></div>' +
-      '</div>';
-    grid.appendChild(card);
-  });
+  fetch("/api/listings?status=active")
+    .then(function (r) { if (!r.ok) throw new Error("no api"); return r.json(); })
+    .then(function (data) {
+      var listings = data.listings || [];
+      if (!listings.length) {
+        grid.innerHTML = '<p class="prop-empty">No listings yet — be the first to <a href="dashboard/seller-dashboard.html">list a property</a>.</p>';
+        return;
+      }
+      listings.forEach(function (item, i) {
+        var photoClass = "p" + ((i % 3) + 1);
+        var priceLabel = item.priceUnit === "month"
+          ? "Rs. " + Number(item.price).toLocaleString() + "/mo"
+          : "Rs. " + Number(item.price).toLocaleString();
+        var card = document.createElement("div");
+        card.className = "prop-card reveal";
+        card.innerHTML =
+          '<div class="prop-photo ' + photoClass + '"><span class="prop-tag">' + (item.priceUnit === "month" ? "For Rent" : "For Sale") + '</span></div>' +
+          '<div class="prop-body">' +
+            '<div class="prop-price">' + priceLabel + '</div>' +
+            '<div class="prop-title">' + item.title + '</div>' +
+            '<div class="prop-loc">' + (item.city || item.province || "Sri Lanka") + '</div>' +
+            '<div class="prop-meta"><span>' + item.category + '</span></div>' +
+          '</div>';
+        grid.appendChild(card);
+      });
+    })
+    .catch(function () {
+      grid.innerHTML = '<p class="prop-empty">Couldn\'t load listings right now — please refresh.</p>';
+    });
 }
 
 // Fades and lifts each .reveal element into place as it enters the viewport.
