@@ -155,6 +155,8 @@ nav.links a:hover::after{width:100%;}
 
 /* ---------- Featured properties ---------- */
 .prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.prop-empty{grid-column:1/-1;color:#7A8188;font-size:15px;padding:32px 0;text-align:center;}
+.prop-empty a{color:var(--emerald);font-weight:600;}
 .prop-card{background:#fff;border:1px solid var(--sand);border-radius:14px;overflow:hidden;transition:box-shadow .25s ease,transform .25s ease;}
 .prop-card:hover{box-shadow:0 24px 44px -20px rgba(5,36,51,0.3);transform:translateY(-4px);}
 .prop-photo{height:170px;position:relative;}
