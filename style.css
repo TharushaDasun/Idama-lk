@@ -164,6 +164,10 @@ nav.links a:hover::after{width:100%;}
 .prop-photo.p2{background:linear-gradient(135deg,var(--ocean),var(--copper));}
 .prop-photo.p3{background:linear-gradient(135deg,#134C42,var(--ocean));}
 .prop-tag{position:absolute;top:14px;left:14px;background:rgba(255,255,255,0.92);color:var(--ink);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:6px;}
+.prop-whatsapp{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:#25D366;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px -4px rgba(0,0,0,0.4);transition:transform .15s ease;}
+.prop-whatsapp:hover{transform:scale(1.08);}
+.prop-whatsapp svg{width:18px;height:18px;color:#fff;}
 .prop-body{padding:18px 20px 20px;}
 .prop-price{font-family:'Fraunces',serif;font-size:20px;color:var(--ink);margin-bottom:4px;}
 .prop-title{font-size:14.5px;font-weight:600;margin-bottom:3px;}
@@ -171,6 +175,8 @@ nav.links a:hover::after{width:100%;}
 .prop-meta{display:flex;gap:16px;border-top:1px solid var(--sand);padding-top:12px;}
 .prop-meta span{font-size:12.5px;color:#767F86;display:flex;align-items:center;gap:5px;}
 .prop-meta svg{width:14px;height:14px;color:var(--emerald);}
+.prop-report{display:block;margin-top:8px;font-size:11.5px;color:#B0B6BB;text-decoration:underline;}
+.prop-report:hover{color:#B3413A;}
 
 /* ---------- Categories ---------- */
 .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
@@ -227,3 +233,4 @@ footer{background:var(--ocean-deep);color:rgba(255,255,255,0.55);padding:52px 0 
   .foot-grid{flex-direction:column;}
 }
 
+.prop-card-link{cursor:pointer;}
