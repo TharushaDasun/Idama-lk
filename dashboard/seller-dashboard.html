@@ -1,5 +1,5 @@
-<html lang="en">
 <!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,6 +9,7 @@
 <body>
 
 <div id="loginScreen" class="login-screen">
+  <div class="login-bg"></div>
   <div class="login-card">
     <div class="logo">Idama<span>.lk</span></div>
     <p>Seller account — list and manage your properties</p>
@@ -41,33 +42,29 @@
 
     <div class="panel-section active" id="overview">
       <div class="stat-grid">
-        <div class="stat-card"><div class="num">4</div><div class="label">Total listings</div></div>
-        <div class="stat-card"><div class="num">3</div><div class="label">Active</div></div>
-        <div class="stat-card"><div class="num">312</div><div class="label">Total views</div></div>
-        <div class="stat-card"><div class="num">1</div><div class="label">Pending approval</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c1"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><div class="num">4</div><div class="label">Total listings</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c2"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg></div><div class="num">3</div><div class="label">Active</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c3"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="num">312</div><div class="label">Total views</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c4"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div class="num">1</div><div class="label">Pending approval</div></div>
       </div>
+      <span class="kicker">Dashboard</span>
       <h2 class="sec-title">Recent activity</h2>
-      <p style="color:#7A8188;font-size:14px;">"2-Story House, Nugegoda" got 18 new views this week. "20-Perch Land, Kurunegala" boost expires in 6 hours.</p>
+      <p class="activity-note">"2-Story House, Nugegoda" got 18 new views this week. "20-Perch Land, Kurunegala" boost expires in 6 hours.</p>
     </div>
 
     <div class="panel-section" id="listings">
+      <span class="kicker">Manage</span>
       <h2 class="sec-title">My Listings</h2>
       <table class="listings-table">
-        <tr><th>Property</th><th>Category</th><th>Price</th><th>Status</th><th>Views</th><th>Actions</th></tr>
-        <tr><td>2-Story House, Nugegoda</td><td>House</td><td>Rs. 18.5M</td><td><span class="status-pill active">Active</span></td><td>142</td>
-          <td class="row-actions"><a href="#">Edit</a><a href="#" class="boost">Boost</a><a href="#">Delete</a></td></tr>
-        <tr><td>2BR Apartment, Rajagiriya</td><td>Apartment</td><td>Rs. 65,000/mo</td><td><span class="status-pill active">Active</span></td><td>89</td>
-          <td class="row-actions"><a href="#">Edit</a><a href="#" class="boost">Boost</a><a href="#">Delete</a></td></tr>
-        <tr><td>20-Perch Land, Kurunegala</td><td>Land</td><td>Rs. 4.2M</td><td><span class="status-pill pending">Boosted</span></td><td>68</td>
-          <td class="row-actions"><a href="#">Edit</a><a href="#">Delete</a></td></tr>
-        <tr><td>Warehouse, Ja-Ela</td><td>Commercial</td><td>Rs. 95,000/mo</td><td><span class="status-pill expired">Expired</span></td><td>13</td>
-          <td class="row-actions"><a href="#">Edit</a><a href="#" class="boost">Boost</a><a href="#">Delete</a></td></tr>
+        <thead><tr><th>Property</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="myListingsBody"><tr><td colspan="5" style="color:#9AA2A8;">Loading...</td></tr></tbody>
       </table>
     </div>
 
     <div class="panel-section" id="add">
+      <span class="kicker">New listing</span>
       <h2 class="sec-title">Add a new property</h2>
-      <form class="form-grid" onsubmit="return false;">
+      <form class="form-grid" id="addPropertyForm" onsubmit="submitListing(event)">
         <div class="f-field full">
           <label>Category</label>
           <select id="category" onchange="toggleCategoryFields()">
@@ -78,24 +75,32 @@
             <option value="commercial">Commercial</option>
           </select>
         </div>
-        <div class="f-field"><label>Listing title</label><input type="text" placeholder="e.g. 2-Story House, Nugegoda"></div>
-        <div class="f-field"><label>Price (Rs.)</label><input type="number" placeholder="e.g. 18500000"></div>
-        <div class="f-field"><label>Province</label><select><option>Select province</option><option>Western</option><option>Central</option><option>Southern</option></select></div>
-        <div class="f-field"><label>City / Town</label><input type="text" placeholder="e.g. Nugegoda"></div>
+        <div class="f-field"><label>Listing title</label><input id="f-title" type="text" placeholder="e.g. 2-Story House, Nugegoda"></div>
+        <div class="f-field"><label>Price (Rs.)</label><input id="f-price" type="number" placeholder="e.g. 18500000"></div>
+        <div class="f-field"><label>Province</label><select id="f-province"><option value="">Select province</option><option>Western</option><option>Central</option><option>Southern</option></select></div>
+        <div class="f-field"><label>City / Town</label><input id="f-city" type="text" placeholder="e.g. Nugegoda"></div>
+        <div class="f-field"><label>Contact number (WhatsApp)</label><input id="f-contact" type="tel" placeholder="e.g. 0771234567"></div>
 
-        <div class="f-field type-field" data-cat="land"><label>Extent (perches)</label><input type="number" placeholder="e.g. 20"></div>
-        <div class="f-field type-field" data-cat="house apartment"><label>Bedrooms</label><input type="number" placeholder="e.g. 3"></div>
-        <div class="f-field type-field" data-cat="house apartment"><label>Bathrooms</label><input type="number" placeholder="e.g. 2"></div>
-        <div class="f-field type-field" data-cat="apartment"><label>Floor</label><input type="number" placeholder="e.g. 5"></div>
-        <div class="f-field type-field" data-cat="commercial"><label>Floor area (sq.ft)</label><input type="number" placeholder="e.g. 2400"></div>
+        <div class="f-field type-field" data-cat="land"><label>Extent (perches)</label><input id="f-perches" type="number" placeholder="e.g. 20"></div>
+        <div class="f-field type-field" data-cat="house apartment"><label>Bedrooms</label><input id="f-bedrooms" type="number" placeholder="e.g. 3"></div>
+        <div class="f-field type-field" data-cat="house apartment"><label>Bathrooms</label><input id="f-bathrooms" type="number" placeholder="e.g. 2"></div>
+        <div class="f-field type-field" data-cat="apartment"><label>Floor</label><input id="f-floor" type="number" placeholder="e.g. 5"></div>
+        <div class="f-field type-field" data-cat="commercial"><label>Floor area (sq.ft)</label><input id="f-floorarea" type="number" placeholder="e.g. 2400"></div>
 
-        <div class="f-field full"><label>Description</label><textarea placeholder="Describe the property..."></textarea></div>
-        <div class="f-field full"><label>Photos</label><div class="upload-box">Tap to upload photos (demo — not functional yet)</div></div>
-        <div class="submit-row"><button class="btn-primary" type="submit">Submit listing</button></div>
+        <div class="f-field full"><label>Description</label><textarea id="f-description" placeholder="Describe the property..."></textarea></div>
+        <div class="f-field full">
+          <label>Photos</label>
+          <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotoSelect(event)">
+          <div class="upload-box" onclick="document.getElementById('photoInput').click()">Tap to upload photos</div>
+          <div id="photoPreview" class="photo-preview"></div>
+        </div>
+        <div id="addListingMsg" class="form-msg hidden"></div>
+        <div class="submit-row"><button class="btn-primary" type="submit" id="submitListingBtn">Submit listing</button></div>
       </form>
     </div>
 
     <div class="panel-section" id="boost">
+      <span class="kicker">Promote</span>
       <h2 class="sec-title">Idama Boost — get seen first</h2>
       <p class="boost-intro">Pin your listing to the top of search results and the homepage. Choose how long you want extra visibility — pay only when you need it.</p>
       <div class="boost-grid">
@@ -133,4 +138,3 @@
 <script src="seller-dashboard.js"></script>
 </body>
 </html>
-u
