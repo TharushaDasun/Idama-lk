@@ -13,11 +13,33 @@
   <div class="login-card">
     <div class="logo">Idama<span>.lk</span></div>
     <p>Seller account — list and manage your properties</p>
+
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" id="tabLogin" onclick="setAuthTab('login')">Log in</button>
+      <button type="button" class="auth-tab" id="tabSignup" onclick="setAuthTab('signup')">Sign up</button>
+    </div>
+
+    <form id="loginForm" class="auth-form" onsubmit="doLogin(event)">
+      <div class="f-field full"><label>Email</label><input type="email" placeholder="you@example.com" required></div>
+      <div class="f-field full"><label>Password</label><input type="password" placeholder="••••••••" required></div>
+      <button class="btn-primary full-w" type="submit">Log in</button>
+    </form>
+
+    <form id="signupForm" class="auth-form hidden" onsubmit="doLogin(event)">
+      <div class="f-field full"><label>Full name</label><input type="text" placeholder="Your name" required></div>
+      <div class="f-field full"><label>Email</label><input type="email" placeholder="you@example.com" required></div>
+      <div class="f-field full"><label>Password</label><input type="password" placeholder="Create a password" required></div>
+      <button class="btn-primary full-w" type="submit">Create account</button>
+    </form>
+
+    <div class="auth-divider"><span>or</span></div>
+
     <button class="google-btn" onclick="doLogin()">
       <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.3 29.4 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5.1 29.6 3 24 3 16.1 3 9.2 7.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.4C29.6 36.4 26.9 37 24 37c-5.3 0-9.8-2.6-11.3-6.9l-6.5 5C9.1 40.5 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.9 2.6-2.8 4.7-5.2 6l6.6 5.4C39.4 37.1 43 31.3 43 24c0-1.4-.1-2.7-.4-3.5z"/></svg>
       Continue with Google
     </button>
-    <div class="login-note">Frontend demo only — no real sign-in yet</div>
+
+    <div class="login-note">UI preview only — accounts aren't connected to a real backend yet</div>
   </div>
 </div>
 
@@ -34,6 +56,7 @@
   <div class="tabs">
     <div class="tab-btn active" data-tab="overview">Overview</div>
     <div class="tab-btn" data-tab="listings">My Listings</div>
+    <div class="tab-btn" data-tab="pending" id="pendingTabBtn">Pending approval</div>
     <div class="tab-btn" data-tab="add">Add Property</div>
     <div class="tab-btn" data-tab="boost">Idama Boost</div>
   </div>
@@ -42,14 +65,14 @@
 
     <div class="panel-section active" id="overview">
       <div class="stat-grid">
-        <div class="stat-card"><div class="stat-icon-wrap c1"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><div class="num">4</div><div class="label">Total listings</div></div>
-        <div class="stat-card"><div class="stat-icon-wrap c2"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg></div><div class="num">3</div><div class="label">Active</div></div>
-        <div class="stat-card"><div class="stat-icon-wrap c3"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="num">312</div><div class="label">Total views</div></div>
-        <div class="stat-card"><div class="stat-icon-wrap c4"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div class="num">1</div><div class="label">Pending approval</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c1"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><div class="num" id="sTotal">0</div><div class="label">Total listings</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c2"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg></div><div class="num" id="sActive">0</div><div class="label">Live on Idama.lk</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c3"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div class="num" id="sPending">0</div><div class="label">Awaiting approval</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c4"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg></div><div class="num" id="sRejected">0</div><div class="label">Rejected</div></div>
       </div>
       <span class="kicker">Dashboard</span>
-      <h2 class="sec-title">Recent activity</h2>
-      <p class="activity-note">"2-Story House, Nugegoda" got 18 new views this week. "20-Perch Land, Kurunegala" boost expires in 6 hours.</p>
+      <h2 class="sec-title">Summary</h2>
+      <p class="activity-note" id="activityNote">Loading your listings...</p>
     </div>
 
     <div class="panel-section" id="listings">
@@ -60,6 +83,17 @@
         <tbody id="myListingsBody"><tr><td colspan="5" style="color:#9AA2A8;">Loading...</td></tr></tbody>
       </table>
     </div>
+
+    <div class="panel-section" id="pending">
+      <span class="kicker">Review</span>
+      <h2 class="sec-title">Waiting for admin approval</h2>
+      <p class="boost-intro">These properties have been submitted and are not visible to the public yet. They go live as soon as an admin approves them. You can withdraw a listing while it is pending.</p>
+      <table class="listings-table">
+        <thead><tr><th>Property</th><th>Category</th><th>Price</th><th>Submitted</th><th>Actions</th></tr></thead>
+        <tbody id="pendingBody"><tr><td colspan="5" style="color:#9AA2A8;">Loading...</td></tr></tbody>
+      </table>
+    </div>
+
 
     <div class="panel-section" id="add">
       <span class="kicker">New listing</span>
