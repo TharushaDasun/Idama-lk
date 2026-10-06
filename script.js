@@ -87,6 +87,8 @@ function renderListings(listings, emptyMessage) {
   }
   listings.forEach(function (item, i) {
     var photoClass = "p" + ((i % 3) + 1);
+    var firstImg = (item.images || []).filter(function (u) { return /^https?:\/\//.test(u); })[0];
+    var photoStyle = firstImg ? ' style="background-image:url(\'' + firstImg + '\');background-size:cover;background-position:center;"' : "";
     var priceLabel = item.priceUnit === "month"
       ? "Rs. " + Number(item.price).toLocaleString() + "/mo"
       : "Rs. " + Number(item.price).toLocaleString();
@@ -97,7 +99,7 @@ function renderListings(listings, emptyMessage) {
       ? '<a class="prop-whatsapp" target="_blank" href="https://wa.me/' + waNumber(item.sellerContact) + '?text=' + encodeURIComponent("Hi, I'm interested in " + item.title + " on Idama.lk") + '"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.3-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.1 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.3-.8.8-.8 1.9s.8 2.2 1 2.4c.1.1 1.6 2.5 3.9 3.5.5.2 1 .4 1.3.5.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1 .2-.5.2-1 .1-1.1-.1-.1-.2-.1-.5-.3z"/><path d="M12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.5A10 10 0 1012 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1112 20.2z"/></svg></a>'
       : '';
     card.innerHTML =
-      '<div class="prop-photo ' + photoClass + '"><span class="prop-tag">' + (item.priceUnit === "month" ? "For Rent" : "For Sale") + '</span>' + waLink + '</div>' +
+      '<div class="prop-photo ' + photoClass + '"' + photoStyle + '><span class="prop-tag">' + (item.priceUnit === "month" ? "For Rent" : "For Sale") + '</span>' + waLink + '</div>' +
       '<div class="prop-body">' +
         '<div class="prop-price">' + priceLabel + '</div>' +
         '<div class="prop-title">' + esc(item.title) + '</div>' +
@@ -206,3 +208,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   items.forEach(function (el) { observer.observe(el); });
 });
+
