@@ -213,5 +213,5 @@ function submitListing(event){
     .finally(function(){
       btn.disabled = false;
       btn.textContent = 'Submit listing';
-    });
+});
 }
