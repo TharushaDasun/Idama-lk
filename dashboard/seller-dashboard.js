@@ -103,6 +103,60 @@ function toggleCategoryFields(){
   });
 }
 
+// --- Photo upload (Cloudinary, unsigned preset) ---
+var CLOUDINARY_CLOUD_NAME = 'dxv6lxlkg';
+var CLOUDINARY_UPLOAD_PRESET = 'idama_listings';
+var uploadedImages = []; // array of secure_url strings, sent as the listing's "images"
+
+function renderPhotoPreview(){
+  var box = document.getElementById('photoPreview');
+  box.innerHTML = uploadedImages.map(function(url, i){
+    return '<div class="photo-thumb">' +
+      '<img src="' + url + '" alt="">' +
+      '<button type="button" class="photo-remove" onclick="removePhoto(' + i + ')">&times;</button>' +
+      '</div>';
+  }).join('');
+}
+function removePhoto(i){
+  uploadedImages.splice(i, 1);
+  renderPhotoPreview();
+}
+
+function handlePhotoSelect(event){
+  var files = Array.prototype.slice.call(event.target.files || []);
+  if (!files.length) return;
+  var box = document.querySelector('.upload-box');
+  var originalText = box.textContent;
+  box.textContent = 'Uploading ' + files.length + ' photo(s)...';
+
+  var uploads = files.map(function(file){
+    var fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    return fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/image/upload', {
+      method: 'POST',
+      body: fd
+    }).then(function(r){
+      if (!r.ok) throw new Error('upload failed');
+      return r.json();
+    });
+  });
+
+  Promise.all(uploads)
+    .then(function(results){
+      results.forEach(function(res){ uploadedImages.push(res.secure_url); });
+      renderPhotoPreview();
+      box.textContent = originalText;
+    })
+    .catch(function(){
+      box.textContent = 'Some photos failed to upload — try again.';
+      setTimeout(function(){ box.textContent = originalText; }, 2500);
+    })
+    .finally(function(){
+      event.target.value = ''; // allow re-selecting the same file(s) later
+    });
+}
+
 // Submits the Add Property form to the real backend (POST /api/listings).
 // New listings start as "pending" until an admin approves them.
 function submitListing(event){
@@ -124,7 +178,8 @@ function submitListing(event){
     floorAreaSqft: val('f-floorarea'),
     description: val('f-description'),
     sellerName: document.getElementById('sellerName') ? document.getElementById('sellerName').textContent : '',
-    sellerContact: val('f-contact')
+    sellerContact: val('f-contact'),
+    images: uploadedImages
   };
 
   if (!payload.title || !payload.category) {
@@ -147,6 +202,8 @@ function submitListing(event){
       msg.className = 'form-msg success';
       document.getElementById('addPropertyForm').reset();
       document.querySelectorAll('.type-field').forEach(function(f){ f.classList.remove('is-open'); });
+      uploadedImages = [];
+      renderPhotoPreview();
       loadSellerData();
     })
     .catch(function(){
