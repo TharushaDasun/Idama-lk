@@ -1,5 +1,6 @@
-// Demo-only credential check (frontend, no real backend). Change these to
-// whatever you want the admin login to be.
+// NOTE: this login check runs in the browser, so anyone who views this file
+// can read the password. It only hides the panel UI; it does NOT protect the
+// API. Real protection needs a server-side check (see the security note).
 var ADMIN_USER = 'admin';
 var ADMIN_PASS = 'admin123';
 
@@ -18,7 +19,7 @@ function attemptLogin(){
 function doLogin(){
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
-  updateStats();
+  refreshAll();
 }
 function doLogout(){
   document.getElementById('dashboard').classList.add('hidden');
@@ -30,81 +31,123 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
     document.querySelectorAll('.panel-section').forEach(function(s){s.classList.remove('active');});
     btn.classList.add('active');
     document.getElementById(btn.dataset.tab).classList.add('active');
+    refreshAll();
   });
 });
 
-// --- Demo data layer (localStorage-based; no real backend yet) ---
-function getApproved(){
-  var raw = localStorage.getItem('idama_approved_listings');
-  return raw ? JSON.parse(raw) : [];
-}
-function saveApproved(list){
-  localStorage.setItem('idama_approved_listings', JSON.stringify(list));
-}
-
-function approveRow(link){
-  var row = link.closest('tr');
-  var cells = row.querySelectorAll('td');
-  var title = cells[0].textContent.trim();
-  var category = cells[1].textContent.trim();
-
-  var list = getApproved();
-  list.push({
-    title: title,
-    category: category,
-    tag: 'For Sale',
-    price: 'Price on request',
-    location: 'Sri Lanka'
+// Seller-submitted text must never be inserted into the page unescaped.
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
   });
-  saveApproved(list);
-
-  var pill = row.querySelector('.status-pill');
-  pill.textContent = 'Approved';
-  pill.className = 'status-pill active';
-  row.querySelector('.row-actions').innerHTML = '<span style="color:#9AA2A8;font-size:12.5px;">Live on main page</span>';
-  updateStats();
 }
-function rejectRow(link){
-  var row = link.closest('tr');
-  row.style.opacity = '0.4';
-  var pill = row.querySelector('.status-pill');
-  pill.textContent = 'Rejected';
-  pill.className = 'status-pill expired';
-  row.querySelector('.row-actions').innerHTML = '<span style="color:#9AA2A8;font-size:12.5px;">Done</span>';
-  updateStats();
+function timeAgo(iso){
+  var mins = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+  if (mins < 60) return mins + ' min ago';
+  var hrs = Math.round(mins / 60);
+  if (hrs < 24) return hrs + ' hr ago';
+  return Math.round(hrs / 24) + ' day(s) ago';
 }
-function deleteRow(link){
-  var row = link.closest('tr');
-  var title = row.querySelector('td').textContent.trim();
-
-  var list = getApproved().filter(function(item){ return item.title !== title; });
-  saveApproved(list);
-
-  row.style.transition = 'opacity .25s ease';
-  row.style.opacity = '0';
-  setTimeout(function(){ row.remove(); updateStats(); }, 250);
-}
-function suspendRow(link){
-  var row = link.closest('tr');
-  var pill = row.querySelector('.status-pill');
-  var isActive = pill.classList.contains('active');
-  pill.textContent = isActive ? 'Suspended' : 'Active';
-  pill.className = isActive ? 'status-pill expired' : 'status-pill active';
-  link.textContent = isActive ? 'Activate' : 'Suspend';
+function row(cols, text, color){
+  return '<tr><td colspan="' + cols + '" style="color:' + (color || '#9AA2A8') + ';">' + text + '</td></tr>';
 }
 
-// Live overview stats: real seller-login count + approved listings, computed
-// from what's actually in this browser's demo data (no backend yet, so this
-// only reflects activity made on this device/site).
-function updateStats(){
-  var userCount = parseInt(localStorage.getItem('idama_user_count') || '0', 10);
-  var approvedCount = getApproved().length;
-  var pendingCount = document.querySelectorAll('#pending .status-pill.pending').length;
-  var reportedCount = document.querySelectorAll('#reported .listings-table tr').length - 1; // minus header row
+// One fetch of every listing feeds all four views.
+function refreshAll(){
+  fetch('/api/listings')
+    .then(function(r){ if (!r.ok) throw new Error('api'); return r.json(); })
+    .then(function(data){
+      var all = data.listings || [];
+      renderStats(all);
+      renderPending(all.filter(function(l){ return l.status === 'pending'; }));
+      renderReported(all.filter(function(l){ return l.reportCount > 0; }));
+      renderSellers(all);
+    })
+    .catch(function(){
+      ['pendingBody', 'reportedBody', 'usersBody'].forEach(function(id){
+        document.getElementById(id).innerHTML = row(6, 'Could not reach the server.', '#B3413A');
+      });
+      document.getElementById('activityNote').textContent = 'Could not reach the server.';
+    });
+}
 
-  var nums = document.querySelectorAll('.stat-grid .num');
-  if (nums[0]) nums[0].textContent = userCount.toLocaleString();
-  if (nums[1]) nums[1].textContent = (386 + approvedCount).toLocaleString();
-  if (nums[2]) nums[2].textContent = pendingCount;
-  if (nums[3]) nums[3].textContent = reportedCount >= 0 ? reportedCount : 0;
+// One seller = one contact number (or name if no number was given).
+function sellerKey(l){
+  var digits = String(l.sellerContact || '').replace(/[^0-9]/g, '');
+  return digits || String(l.sellerName || '').toLowerCase();
+}
+
+function renderStats(all){
+  var pending = all.filter(function(l){ return l.status === 'pending'; }).length;
+  var reported = all.filter(function(l){ return l.reportCount > 0; }).length;
+  var sellers = {};
+  all.forEach(function(l){ sellers[sellerKey(l)] = true; });
+  var sellerCount = Object.keys(sellers).filter(Boolean).length;
+
+  document.getElementById('statUsers').textContent = sellerCount.toLocaleString();
+  document.getElementById('statListings').textContent = all.length.toLocaleString();
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statReported').textContent = reported;
+  document.getElementById('activityNote').textContent =
+    pending + ' listing(s) waiting for approval, ' + reported + ' reported.';
+}
+
+function renderPending(list){
+  var body = document.getElementById('pendingBody');
+  body.innerHTML = list.length ? list.map(function(l){
+    return '<tr><td><a href="../detail.html?id=' + encodeURIComponent(l.id) + '" target="_blank">' + esc(l.title) + '</a></td>' +
+      '<td>' + esc(l.category) + '</td><td>' + esc(l.sellerName || '-') + '</td>' +
+      '<td>' + timeAgo(l.createdAt) + '</td><td><span class="status-pill pending">Pending</span></td>' +
+      '<td class="row-actions">' +
+        '<a href="#" class="approve" onclick="setStatus(\'' + esc(l.id) + '\',\'active\');return false;">Approve</a>' +
+        '<a href="#" class="reject" onclick="setStatus(\'' + esc(l.id) + '\',\'rejected\');return false;">Reject</a>' +
+      '</td></tr>';
+  }).join('') : row(6, 'No listings are waiting for approval.');
+}
+
+function renderReported(list){
+  var body = document.getElementById('reportedBody');
+  body.innerHTML = list.length ? list.map(function(l){
+    var reasons = l.reportReasons || [];
+    var latest = reasons.length ? reasons[reasons.length - 1] : 'No reason given';
+    return '<tr><td><a href="../detail.html?id=' + encodeURIComponent(l.id) + '" target="_blank">' + esc(l.title) + '</a></td>' +
+      '<td>' + l.reportCount + '</td><td>' + esc(latest) + '</td>' +
+      '<td class="row-actions">' +
+        '<a href="#" onclick="dismissReports(\'' + esc(l.id) + '\');return false;">Dismiss</a>' +
+        '<a href="#" class="delete" onclick="deleteListing(\'' + esc(l.id) + '\');return false;">Delete</a>' +
+      '</td></tr>';
+  }).join('') : row(4, 'No reported listings.');
+}
+
+function renderSellers(all){
+  var body = document.getElementById('usersBody');
+  var map = {};
+  all.forEach(function(l){
+    var k = sellerKey(l);
+    if (!k) return;
+    var s = map[k] || (map[k] = { name: l.sellerName, contact: l.sellerContact, total: 0, live: 0, last: l.createdAt });
+    s.total++;
+    if (l.status === 'active') s.live++;
+    if (new Date(l.createdAt) > new Date(s.last)) s.last = l.createdAt;
+  });
+  var sellers = Object.keys(map).map(function(k){ return map[k]; })
+    .sort(function(a, b){ return new Date(b.last) - new Date(a.last); });
+  body.innerHTML = sellers.length ? sellers.map(function(s){
+    return '<tr><td>' + esc(s.name || '-') + '</td><td>' + esc(s.contact || '-') + '</td>' +
+      '<td>' + s.total + '</td><td>' + s.live + '</td><td>' + timeAgo(s.last) + '</td></tr>';
+  }).join('') : row(5, 'No sellers yet.');
+}
+
+function patchListing(id, patch){
+  return fetch('/api/listings/' + encodeURIComponent(id), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(patch)
+  }).then(refreshAll);
+}
+function setStatus(id, status){ patchListing(id, { status: status }); }
+function dismissReports(id){ patchListing(id, { reportCount: 0, reportReasons: [] }); }
+function deleteListing(id){
+  if (!confirm('Delete this listing permanently?')) return;
+  fetch('/api/listings/' + encodeURIComponent(id), { method: 'DELETE' }).then(refreshAll);
 }
