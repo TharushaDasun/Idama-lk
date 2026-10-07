@@ -23,7 +23,6 @@
     </div>
     <div id="loginError" class="login-error hidden">Incorrect username or password</div>
     <button class="btn-primary full-w" onclick="attemptLogin()">Log in</button>
-    <div class="login-note">Demo credentials — admin / admin123</div>
   </div>
 </div>
 
@@ -41,34 +40,29 @@
     <div class="tab-btn active" data-tab="overview">Overview</div>
     <div class="tab-btn" data-tab="pending">Pending</div>
     <div class="tab-btn" data-tab="reported">Reported</div>
-    <div class="tab-btn" data-tab="users">Users</div>
+    <div class="tab-btn" data-tab="users">Sellers</div>
   </div>
 
   <div class="panel">
 
     <div class="panel-section active" id="overview">
       <div class="stat-grid">
-        <div class="stat-card"><div class="stat-icon-wrap c3"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div class="num">1,240</div><div class="label">Total users</div></div>
-        <div class="stat-card"><div class="stat-icon-wrap c2"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><div class="num">386</div><div class="label">Total listings</div></div>
-        <div class="stat-card"><div class="stat-icon-wrap c1"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div class="num">12</div><div class="label">Pending approval</div></div>
-        <div class="stat-card"><div class="stat-icon-wrap c4"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div><div class="num">5</div><div class="label">Reported listings</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c3"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div class="num" id="statUsers">0</div><div class="label">Sellers</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c2"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><div class="num" id="statListings">0</div><div class="label">Total listings</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c1"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div class="num" id="statPending">0</div><div class="label">Pending approval</div></div>
+        <div class="stat-card"><div class="stat-icon-wrap c4"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div><div class="num" id="statReported">0</div><div class="label">Reported listings</div></div>
       </div>
       <span class="kicker">Dashboard</span>
       <h2 class="sec-title">Recent activity</h2>
-      <p class="activity-note">6 new listings submitted for approval today. "Warehouse, Ja-Ela" was reported twice for incorrect pricing.</p>
+      <p class="activity-note" id="activityNote">Loading recent activity...</p>
     </div>
 
     <div class="panel-section" id="pending">
       <span class="kicker">Review</span>
       <h2 class="sec-title">Pending Approvals</h2>
       <table class="listings-table">
-        <tr><th>Property</th><th>Category</th><th>Seller</th><th>Submitted</th><th>Status</th><th>Actions</th></tr>
-        <tr><td>3BR House, Kandy</td><td>House</td><td>Nimal P.</td><td>2 hours ago</td><td><span class="status-pill pending">Pending</span></td>
-          <td class="row-actions"><a href="#" class="approve" onclick="approveRow(this);return false;">Approve</a><a href="#" class="reject" onclick="rejectRow(this);return false;">Reject</a></td></tr>
-        <tr><td>Beach Land, Galle</td><td>Land</td><td>Shanika W.</td><td>5 hours ago</td><td><span class="status-pill pending">Pending</span></td>
-          <td class="row-actions"><a href="#" class="approve" onclick="approveRow(this);return false;">Approve</a><a href="#" class="reject" onclick="rejectRow(this);return false;">Reject</a></td></tr>
-        <tr><td>Office Space, Colombo 3</td><td>Commercial</td><td>Faizal M.</td><td>1 day ago</td><td><span class="status-pill pending">Pending</span></td>
-          <td class="row-actions"><a href="#" class="approve" onclick="approveRow(this);return false;">Approve</a><a href="#" class="reject" onclick="rejectRow(this);return false;">Reject</a></td></tr>
+        <thead><tr><th>Property</th><th>Category</th><th>Seller</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="pendingBody"><tr><td colspan="6" style="color:#9AA2A8;">Loading...</td></tr></tbody>
       </table>
     </div>
 
@@ -76,27 +70,18 @@
       <span class="kicker">Moderate</span>
       <h2 class="sec-title">Reported Listings</h2>
       <table class="listings-table">
-        <tr><th>Property</th><th>Reports</th><th>Reason</th><th>Reported on</th><th>Actions</th></tr>
-        <tr><td>Warehouse, Ja-Ela</td><td>2</td><td>Incorrect pricing</td><td>Yesterday</td>
-          <td class="row-actions"><a href="#">View</a><a href="#" class="delete" onclick="deleteRow(this);return false;">Delete</a></td></tr>
-        <tr><td>2BR Apartment, Wellawatte</td><td>1</td><td>Duplicate listing</td><td>3 days ago</td>
-          <td class="row-actions"><a href="#">View</a><a href="#" class="delete" onclick="deleteRow(this);return false;">Delete</a></td></tr>
-        <tr><td>10-Perch Land, Matara</td><td>3</td><td>Fake photos</td><td>4 days ago</td>
-          <td class="row-actions"><a href="#">View</a><a href="#" class="delete" onclick="deleteRow(this);return false;">Delete</a></td></tr>
+        <thead><tr><th>Property</th><th>Reports</th><th>Latest reason</th><th>Actions</th></tr></thead>
+        <tbody id="reportedBody"><tr><td colspan="4" style="color:#9AA2A8;">Loading...</td></tr></tbody>
       </table>
     </div>
 
     <div class="panel-section" id="users">
       <span class="kicker">Accounts</span>
-      <h2 class="sec-title">Users</h2>
+      <h2 class="sec-title">Sellers</h2>
+      <p class="boost-intro">Everyone who has posted a listing, built from the listings themselves. Account controls (suspend, verify) arrive once real seller sign-up is connected.</p>
       <table class="listings-table">
-        <tr><th>Name</th><th>Contact</th><th>Listings</th><th>Joined</th><th>Status</th><th>Actions</th></tr>
-        <tr><td>Nimal Perera</td><td>nimal@gmail.com</td><td>3</td><td>Aug 2026</td><td><span class="status-pill active">Active</span></td>
-          <td class="row-actions"><a href="#" onclick="suspendRow(this);return false;">Suspend</a></td></tr>
-        <tr><td>Shanika Wijesinghe</td><td>077 123 4567</td><td>1</td><td>Sep 2026</td><td><span class="status-pill active">Active</span></td>
-          <td class="row-actions"><a href="#" onclick="suspendRow(this);return false;">Suspend</a></td></tr>
-        <tr><td>Faizal Mohamed</td><td>faizal@gmail.com</td><td>5</td><td>Jun 2026</td><td><span class="status-pill expired">Suspended</span></td>
-          <td class="row-actions"><a href="#" onclick="suspendRow(this);return false;">Activate</a></td></tr>
+        <thead><tr><th>Seller</th><th>Contact</th><th>Listings</th><th>Live</th><th>Last posted</th></tr></thead>
+        <tbody id="usersBody"><tr><td colspan="5" style="color:#9AA2A8;">Loading...</td></tr></tbody>
       </table>
     </div>
 
@@ -105,4 +90,4 @@
 
 <script src="admin-panel.js"></script>
 </body>
-</html>
+      </html>
