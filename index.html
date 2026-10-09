@@ -54,9 +54,10 @@
   </div>
 </section>
 
-<form class="search-card" onsubmit="return false;">
+<form class="search-card" onsubmit="performSearch(event)">
   <div class="field">
-    <label for="province">Province</label>
+    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <div><label for="province">Province</label>
     <select id="province">
       <option>Any province</option>
       <option>Western</option>
@@ -68,26 +69,29 @@
       <option>North Central</option>
       <option>Uva</option>
       <option>Sabaragamuwa</option>
-    </select>
+    </select></div>
   </div>
   <div class="field">
-    <label for="city">City / Town</label>
+    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+    <div><label for="city">City / Town</label>
     <select id="city" disabled>
       <option>Select province first</option>
-    </select>
+    </select></div>
   </div>
   <div class="field">
-    <label for="type">Property type</label>
+    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+    <div><label for="type">Property type</label>
     <select id="type">
       <option>Any type</option>
       <option>Land</option>
       <option>House</option>
       <option>Apartment</option>
       <option>Commercial</option>
-    </select>
+    </select></div>
   </div>
   <div class="field">
-    <label for="price">Budget</label>
+    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="14.5" r="1.4" fill="currentColor" stroke="none"/></svg>
+    <div><label for="price">Budget</label>
     <select id="price">
       <option>Any budget</option>
       <option>Under Rs. 5M</option>
@@ -95,13 +99,14 @@
       <option>Rs. 15M – 30M</option>
       <option>Rs. 30M – 60M</option>
       <option>Above Rs. 60M</option>
-    </select>
+    </select></div>
   </div>
   <div class="field field-perches" id="perchesField">
-    <label for="perches">Extent (perches)</label>
-    <input type="number" id="perches" min="0" placeholder="e.g. 20">
+    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M18 8l-5 5-3-3-4 4"/></svg>
+    <div><label for="perches">Extent (perches)</label>
+    <input type="number" id="perches" min="0" placeholder="e.g. 20"></div>
   </div>
-  <button class="search-btn" type="submit">Search</button>
+  <button class="search-btn" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search</button>
 </form>
 
 <section class="section wrap reveal">
@@ -205,4 +210,3 @@
 <script src="script.js"></script>
 </body>
 </html>
-
