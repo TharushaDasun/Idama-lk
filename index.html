@@ -12,24 +12,40 @@
   <div class="wrap">
     <a class="logo" href="#">Idama<span>.lk</span></a>
     <nav class="links">
-      <a href="#">Buy</a>
-      <a href="#">Rent</a>
-      <a href="#">Land</a>
-      <a href="#">Commercial</a>
+      <a href="#" data-i18n="nav.buy">Buy</a>
+      <a href="#" data-i18n="nav.rent">Rent</a>
+      <a href="#" data-i18n="nav.land">Land</a>
+      <a href="#" data-i18n="nav.commercial">Commercial</a>
     </nav>
     <div class="header-right">
-      <a class="btn-list" href="dashboard/seller-dashboard.html">Seller Login</a>
+      <button type="button" class="icon-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+      </button>
+      <button type="button" class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="Switch language">
+        <span class="lang-en">EN</span><span class="lang-sep">/</span><span class="lang-si">සිං</span>
+      </button>
+      <a class="btn-list" href="dashboard/seller-dashboard.html" data-i18n="nav.sellerLogin">Seller Login</a>
       <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
       <label for="nav-toggle" class="nav-toggle-label" aria-label="Menu">
         <span></span><span></span><span></span>
       </label>
     </div>
     <div class="mobile-panel">
-      <a href="#">Buy</a>
-      <a href="#">Rent</a>
-      <a href="#">Land</a>
-      <a href="#">Commercial</a>
-      <a href="dashboard/seller-dashboard.html">Seller Login</a>
+      <a href="#" data-i18n="nav.buy">Buy</a>
+      <a href="#" data-i18n="nav.rent">Rent</a>
+      <a href="#" data-i18n="nav.land">Land</a>
+      <a href="#" data-i18n="nav.commercial">Commercial</a>
+      <a href="dashboard/seller-dashboard.html" data-i18n="nav.sellerLogin">Seller Login</a>
+      <div class="mobile-toggles">
+        <button type="button" class="icon-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+        </button>
+        <button type="button" class="lang-toggle" onclick="toggleLang()" aria-label="Switch language">
+          <span class="lang-en">EN</span><span class="lang-sep">/</span><span class="lang-si">සිං</span>
+        </button>
+      </div>
     </div>
   </div>
 </header>
@@ -43,12 +59,12 @@
   </div>
   <div class="wrap">
     <div class="hero-content">
-      <h1>Find land and property, anywhere in Sri Lanka.</h1>
-      <p>Search by province, property type and budget. Verified listings from owners and agents — for sale or for rent.</p>
+      <h1 data-i18n="hero.title">Find land and property, anywhere in Sri Lanka.</h1>
+      <p data-i18n="hero.subtitle">Search by province, property type and budget. Verified listings from owners and agents — for sale or for rent.</p>
       <div class="hero-eyebrow-row">
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Verified listings</span>
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No agent fees</span>
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>All 9 provinces</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="hero.trust1">Verified listings</span></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="hero.trust2">No agent fees</span></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="hero.trust3">All 9 provinces</span></span>
       </div>
     </div>
   </div>
@@ -57,7 +73,7 @@
 <form class="search-card" onsubmit="performSearch(event)">
   <div class="field">
     <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-    <div><label for="province">Province</label>
+    <div><label for="province" data-i18n="search.province">Province</label>
     <select id="province">
       <option>Any province</option>
       <option>Western</option>
@@ -73,14 +89,14 @@
   </div>
   <div class="field">
     <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
-    <div><label for="city">City / Town</label>
+    <div><label for="city" data-i18n="search.city">City / Town</label>
     <select id="city" disabled>
-      <option>Select province first</option>
+      <option data-i18n="search.selectProvinceFirst">Select province first</option>
     </select></div>
   </div>
   <div class="field">
     <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-    <div><label for="type">Property type</label>
+    <div><label for="type" data-i18n="search.type">Property type</label>
     <select id="type">
       <option>Any type</option>
       <option>Land</option>
@@ -91,7 +107,7 @@
   </div>
   <div class="field">
     <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="14.5" r="1.4" fill="currentColor" stroke="none"/></svg>
-    <div><label for="price">Budget</label>
+    <div><label for="price" data-i18n="search.budget">Budget</label>
     <select id="price">
       <option>Any budget</option>
       <option>Under Rs. 5M</option>
@@ -103,47 +119,47 @@
   </div>
   <div class="field field-perches" id="perchesField">
     <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M18 8l-5 5-3-3-4 4"/></svg>
-    <div><label for="perches">Extent (perches)</label>
+    <div><label for="perches" data-i18n="search.perches">Extent (perches)</label>
     <input type="number" id="perches" min="0" placeholder="e.g. 20"></div>
   </div>
-  <button class="search-btn" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search</button>
+  <button class="search-btn" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span data-i18n="search.btn">Search</span></button>
 </form>
 
 <section class="section wrap reveal">
   <div class="section-head">
-    <span class="kicker">Just listed</span>
-    <h2>Featured properties</h2>
-    <p>The latest verified listings on Idama.lk.</p>
+    <span class="kicker" data-i18n="featured.kicker">Just listed</span>
+    <h2 data-i18n="featured.title">Featured properties</h2>
+    <p data-i18n="featured.subtitle">The latest verified listings on Idama.lk.</p>
   </div>
   <div class="prop-grid" id="propGrid"></div>
 </section>
 
 <section class="section wrap reveal">
   <div class="section-head">
-    <span class="kicker">Explore</span>
-    <h2>Browse by category</h2>
-    <p>Every listing on Idama.lk falls into one of these — pick where to start.</p>
+    <span class="kicker" data-i18n="cat.kicker">Explore</span>
+    <h2 data-i18n="cat.title">Browse by category</h2>
+    <p data-i18n="cat.subtitle">Every listing on Idama.lk falls into one of these — pick where to start.</p>
   </div>
   <div class="cat-grid">
     <div class="cat-card reveal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg>
-      <h3>Houses</h3>
-      <p>Family homes and new builds, for sale or long-term rent.</p>
+      <h3 data-i18n="cat.houses.title">Houses</h3>
+      <p data-i18n="cat.houses.desc">Family homes and new builds, for sale or long-term rent.</p>
     </div>
     <div class="cat-card reveal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V3h9v18M13 21V8h7v13M4 21h16M7 7h1M7 11h1M7 15h1"/></svg>
-      <h3>Apartments</h3>
-      <p>City and suburban apartments, from studios to penthouses.</p>
+      <h3 data-i18n="cat.apartments.title">Apartments</h3>
+      <p data-i18n="cat.apartments.desc">City and suburban apartments, from studios to penthouses.</p>
     </div>
     <div class="cat-card reveal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 20h20M4 20V10l8-6 8 6v10M9 20v-5h6v5"/><path d="M12 4L2 10M12 4l10 6"/></svg>
-      <h3>Land</h3>
-      <p>Residential blocks, paddy, and agricultural land by extent.</p>
+      <h3 data-i18n="cat.land.title">Land</h3>
+      <p data-i18n="cat.land.desc">Residential blocks, paddy, and agricultural land by extent.</p>
     </div>
     <div class="cat-card reveal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M6 21V4h8v17M14 21v-9h4v9M9 8h1M9 12h1M9 16h1"/></svg>
-      <h3>Commercial</h3>
-      <p>Shops, offices and warehouse space for lease or sale.</p>
+      <h3 data-i18n="cat.commercial.title">Commercial</h3>
+      <p data-i18n="cat.commercial.desc">Shops, offices and warehouse space for lease or sale.</p>
     </div>
   </div>
 </section>
@@ -151,25 +167,25 @@
 <section class="how">
   <div class="wrap">
     <div class="section-head">
-      <span class="kicker">Process</span>
-      <h2>How Idama.lk works</h2>
-      <p>Three steps between browsing and moving in.</p>
+      <span class="kicker" data-i18n="how.kicker">Process</span>
+      <h2 data-i18n="how.title">How Idama.lk works</h2>
+      <p data-i18n="how.subtitle">Three steps between browsing and moving in.</p>
     </div>
     <div class="steps">
       <div class="step reveal">
         <div class="num">1</div>
-        <h3>Search by province and budget</h3>
-        <p>Narrow thousands of listings down to what actually fits where you want to live and what you can spend.</p>
+        <h3 data-i18n="how.step1.title">Search by province and budget</h3>
+        <p data-i18n="how.step1.desc">Narrow thousands of listings down to what actually fits where you want to live and what you can spend.</p>
       </div>
       <div class="step reveal">
         <div class="num">2</div>
-        <h3>Compare verified listings</h3>
-        <p>Every listing shows real photos, extent or floor area, and a price — no guessing.</p>
+        <h3 data-i18n="how.step2.title">Compare verified listings</h3>
+        <p data-i18n="how.step2.desc">Every listing shows real photos, extent or floor area, and a price — no guessing.</p>
       </div>
       <div class="step reveal">
         <div class="num">3</div>
-        <h3>Contact the seller directly</h3>
-        <p>Message the owner or agent through Idama.lk and arrange a viewing, no middleman fee.</p>
+        <h3 data-i18n="how.step3.title">Contact the seller directly</h3>
+        <p data-i18n="how.step3.desc">Message the owner or agent through Idama.lk and arrange a viewing, no middleman fee.</p>
       </div>
     </div>
   </div>
@@ -177,8 +193,8 @@
 
 <section class="cta-strip wrap reveal">
   <div class="cta-box">
-    <h2>Have a property to sell or rent out?</h2>
-    <a href="#">List it on Idama.lk</a>
+    <h2 data-i18n="cta.title">Have a property to sell or rent out?</h2>
+    <a href="dashboard/seller-dashboard.html" data-i18n="cta.link">List it on Idama.lk</a>
   </div>
 </section>
 
@@ -187,23 +203,23 @@
     <div class="foot-grid">
       <div>
         <a class="logo" href="#">Idama<span>.lk</span></a>
-        <p style="font-size:13.5px;max-width:240px;margin-top:8px;">Sri Lanka's property marketplace.</p>
+        <p style="font-size:13.5px;max-width:240px;margin-top:8px;" data-i18n="footer.tagline">Sri Lanka's property marketplace.</p>
       </div>
       <div class="foot-col">
-        <h4>Explore</h4>
-        <a href="#">Houses</a>
-        <a href="#">Apartments</a>
-        <a href="#">Land</a>
-        <a href="#">Commercial</a>
+        <h4 data-i18n="footer.explore">Explore</h4>
+        <a href="#" data-i18n="cat.houses.title">Houses</a>
+        <a href="#" data-i18n="cat.apartments.title">Apartments</a>
+        <a href="#" data-i18n="cat.land.title">Land</a>
+        <a href="#" data-i18n="cat.commercial.title">Commercial</a>
       </div>
       <div class="foot-col">
         <h4>Idama.lk</h4>
-        <a href="#">List your property</a>
-        <a href="#">How it works</a>
-        <a href="#">Contact</a>
+        <a href="dashboard/seller-dashboard.html" data-i18n="footer.list">List your property</a>
+        <a href="#" data-i18n="footer.how">How it works</a>
+        <a href="#" data-i18n="footer.contact">Contact</a>
       </div>
     </div>
-    <div class="foot-bottom">© 2026 Idama.lk. All rights reserved.</div>
+    <div class="foot-bottom" data-i18n="footer.copyright">© 2026 Idama.lk. All rights reserved.</div>
   </div>
 </footer>
 
