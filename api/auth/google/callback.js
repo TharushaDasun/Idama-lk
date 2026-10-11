@@ -2,7 +2,9 @@ const { getStateFromRequest, clearStateCookie, createSessionCookie } = require('
 const { findOrCreateGoogleUser } = require('../../../lib/users');
 
 function redirectUri() {
-  return process.env.GOOGLE_REDIRECT_URI;
+  const uri = process.env.GOOGLE_REDIRECT_URI;
+  if (!uri) throw new Error('Missing env var GOOGLE_REDIRECT_URI');
+  return uri;
 }
 
 function failRedirect(res, reason) {
@@ -38,14 +40,20 @@ module.exports = async (req, res) => {
         grant_type: 'authorization_code',
       }),
     });
-    if (!tokenRes.ok) return failRedirect(res, 'token_exchange_failed');
+    if (!tokenRes.ok) {
+      console.error('Google token exchange failed:', tokenRes.status, await tokenRes.text());
+      return failRedirect(res, 'token_exchange_failed');
+    }
     const tokens = await tokenRes.json();
 
     // 2. Fetch the user's profile with the access token.
     const profileRes = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
       headers: { Authorization: 'Bearer ' + tokens.access_token },
     });
-    if (!profileRes.ok) return failRedirect(res, 'profile_fetch_failed');
+    if (!profileRes.ok) {
+      console.error('Google profile fetch failed:', profileRes.status, await profileRes.text());
+      return failRedirect(res, 'profile_fetch_failed');
+    }
     const profile = await profileRes.json();
     if (!profile.sub) return failRedirect(res, 'no_profile_id');
 
@@ -58,6 +66,7 @@ module.exports = async (req, res) => {
     res.writeHead(302, { Location: returnTo + (returnTo.includes('?') ? '&' : '?') + 'loggedIn=1' });
     res.end();
   } catch (err) {
+    console.error('Google OAuth callback error:', err);
     failRedirect(res, 'server_error');
   }
 };
