@@ -1,21 +1,57 @@
-// UI-only for now: Log in / Sign up / Google all just enter the dashboard.
-// No real backend accounts yet — every "seller" is still the same demo user.
-function doLogin(event){
-  if (event) event.preventDefault();
+// Real auth: identity comes entirely from Google (/api/auth/google/start ->
+// Google -> /api/auth/google/callback sets a session cookie -> back here).
+// This page only ever checks "am I logged in?" via /api/auth/me.
+var currentUser = null;
+
+function showDashboard(user){
+  currentUser = user;
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
+  document.getElementById('sellerName').textContent = user.name || user.email || 'Seller';
+  document.getElementById('avatarInitial').textContent = (user.name || user.email || '?').charAt(0).toUpperCase();
   loadSellerData();
 }
-function doLogout(){
+function showLoginScreen(errorCode){
+  currentUser = null;
   document.getElementById('dashboard').classList.add('hidden');
   document.getElementById('loginScreen').classList.remove('hidden');
+  var box = document.getElementById('loginErrorBox');
+  if (errorCode) {
+    var messages = {
+      google_denied: 'Google sign-in was cancelled.',
+      bad_state: 'Your sign-in session expired — please try again.',
+      token_exchange_failed: 'Could not complete sign-in with Google — please try again.',
+      profile_fetch_failed: 'Could not read your Google profile — please try again.',
+      server_error: 'Something went wrong — please try again.'
+    };
+    box.textContent = messages[errorCode] || 'Sign-in failed — please try again.';
+    box.classList.remove('hidden');
+  } else {
+    box.classList.add('hidden');
+  }
 }
-function setAuthTab(name){
-  document.getElementById('tabLogin').classList.toggle('active', name === 'login');
-  document.getElementById('tabSignup').classList.toggle('active', name === 'signup');
-  document.getElementById('loginForm').classList.toggle('hidden', name !== 'login');
-  document.getElementById('signupForm').classList.toggle('hidden', name !== 'signup');
+function doLogout(){
+  fetch('/api/auth/logout', { method: 'POST' }).then(function(){ showLoginScreen(); });
 }
+
+// Checks login state on every page load. If the URL has ?loginError=... from
+// a failed Google callback, show that instead of silently landing on login.
+function checkSession(){
+  var params = new URLSearchParams(window.location.search);
+  var loginError = params.get('loginError');
+  if (params.has('loginError') || params.has('loggedIn')) {
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+  fetch('/api/auth/me')
+    .then(function(r){ return r.json().then(function(data){ return { ok: r.ok, data: data }; }); })
+    .then(function(res){
+      if (res.ok && res.data.user) showDashboard(res.data.user);
+      else showLoginScreen(loginError);
+    })
+    .catch(function(){ showLoginScreen('server_error'); });
+}
+document.addEventListener('DOMContentLoaded', checkSession);
+
 function showTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === name); });
   document.querySelectorAll('.panel-section').forEach(function(s){ s.classList.toggle('active', s.id === name); });
@@ -45,13 +81,13 @@ function timeAgo(iso){
 // Pending tab. Sellers aren't authenticated yet, so "mine" is matched by the
 // seller name shown in the top bar.
 function loadSellerData(){
-  var myName = document.getElementById('sellerName').textContent;
+  if (!currentUser) return;
   var listBody = document.getElementById('myListingsBody');
   var pendBody = document.getElementById('pendingBody');
-  fetch('/api/listings')
+  fetch('/api/listings?sellerId=' + encodeURIComponent(currentUser.id))
     .then(function(r){ if (!r.ok) throw new Error('api'); return r.json(); })
     .then(function(data){
-      var mine = (data.listings || []).filter(function(l){ return l.sellerName === myName; });
+      var mine = data.listings || [];
       var active = mine.filter(function(l){ return l.status === 'active'; });
       var pending = mine.filter(function(l){ return l.status === 'pending'; });
       var rejected = mine.filter(function(l){ return l.status === 'rejected'; });
@@ -177,9 +213,11 @@ function submitListing(event){
     floor: val('f-floor'),
     floorAreaSqft: val('f-floorarea'),
     description: val('f-description'),
-    sellerName: document.getElementById('sellerName') ? document.getElementById('sellerName').textContent : '',
     sellerContact: val('f-contact'),
     images: uploadedImages
+    // sellerId/sellerName are NOT sent — the backend always fills those in
+    // from your logged-in session, so a listing can't be posted under
+    // someone else's name.
   };
 
   if (!payload.title || !payload.category) {
@@ -196,7 +234,11 @@ function submitListing(event){
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   })
-    .then(function(r){ if (!r.ok) throw new Error('Request failed'); return r.json(); })
+    .then(function(r){
+      if (r.status === 401) { showLoginScreen(); throw new Error('logged_out'); }
+      if (!r.ok) throw new Error('Request failed');
+      return r.json();
+    })
     .then(function(){
       msg.textContent = 'Submitted. You can track it in the Pending approval tab until an admin approves it.';
       msg.className = 'form-msg success';
@@ -213,5 +255,5 @@ function submitListing(event){
     .finally(function(){
       btn.disabled = false;
       btn.textContent = 'Submit listing';
-});
+    });
 }
