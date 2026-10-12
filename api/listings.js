@@ -5,6 +5,10 @@ const { getSession } = require('../lib/session');
 const { findUserById } = require('../lib/users');
 
 module.exports = async (req, res) => {
+  // Listing data changes per request (and per logged-in seller when
+  // ?sellerId=... is used) — never let the browser or a CDN cache this.
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+
   if (req.method === 'GET') {
     try {
       const listings = await searchListings(req.query);
