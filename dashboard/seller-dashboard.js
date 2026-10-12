@@ -42,7 +42,7 @@ function checkSession(){
   if (params.has('loginError') || params.has('loggedIn')) {
     window.history.replaceState({}, '', window.location.pathname);
   }
-  fetch('/api/auth/me')
+  fetch('/api/auth/me', { cache: 'no-store' })
     .then(function(r){ return r.json().then(function(data){ return { ok: r.ok, data: data }; }); })
     .then(function(res){
       if (res.ok && res.data.user) showDashboard(res.data.user);
@@ -84,7 +84,7 @@ function loadSellerData(){
   if (!currentUser) return;
   var listBody = document.getElementById('myListingsBody');
   var pendBody = document.getElementById('pendingBody');
-  fetch('/api/listings?sellerId=' + encodeURIComponent(currentUser.id))
+  fetch('/api/listings?sellerId=' + encodeURIComponent(currentUser.id), { cache: 'no-store' })
     .then(function(r){ if (!r.ok) throw new Error('api'); return r.json(); })
     .then(function(data){
       var mine = data.listings || [];
