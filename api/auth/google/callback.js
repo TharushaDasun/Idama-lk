@@ -57,10 +57,18 @@ module.exports = async (req, res) => {
     const profile = await profileRes.json();
     if (!profile.sub) return failRedirect(res, 'no_profile_id');
 
+    // TEMPORARY diagnostic logging — remove once the "same data for every
+    // account" issue is confirmed fixed. Shows exactly what Google returned
+    // and which internal user it resolved to, so we can see where two
+    // different Google accounts would end up pointing at the same record.
+    console.log('Google OAuth profile:', { sub: profile.sub, email: profile.email, name: profile.name });
+
     // 3. Find or create our user record, and start a session.
     const user = await findOrCreateGoogleUser({
       googleId: profile.sub, email: profile.email, name: profile.name, picture: profile.picture,
     });
+
+    console.log('Resolved to internal user:', { id: user.id, googleId: user.googleId, email: user.email, name: user.name });
 
     res.setHeader('Set-Cookie', [createSessionCookie(user), clearStateCookie()]);
     res.writeHead(302, { Location: returnTo + (returnTo.includes('?') ? '&' : '?') + 'loggedIn=1' });
