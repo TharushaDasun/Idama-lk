@@ -16,6 +16,7 @@ module.exports = async (req, res) => {
   try {
     const user = await findUserById(session.id);
     if (!user) return res.status(401).json({ user: null });
+    console.log('/api/auth/me resolved:', { sessionId: session.id, foundId: user.id, email: user.email, name: user.name });
     res.status(200).json({ user: toPublic(user) });
   } catch (err) {
     res.status(500).json({ error: 'Could not load account' });
