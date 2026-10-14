@@ -12,8 +12,13 @@ module.exports = async (req, res) => {
   if (req.method === 'GET') {
     try {
       const listings = await searchListings(req.query);
+      // TEMPORARY diagnostic logging — remove once the "same listings for
+      // every account" issue is confirmed fixed.
+      console.log('/api/listings GET query:', req.query,
+        '-> returned', listings.length, 'listing(s), sellerIds:', listings.map(l => l.sellerId));
       res.status(200).json({ listings });
     } catch (err) {
+      console.error('GET /api/listings failed:', err);
       res.status(500).json({ error: 'Failed to fetch listings' });
     }
     return;
@@ -36,6 +41,7 @@ module.exports = async (req, res) => {
         sellerName: user.name,
         sellerContact: user.phone || '',
       });
+      console.log('/api/listings POST created:', { id: listing.id, sellerId: listing.sellerId, sellerName: listing.sellerName, sessionUserId: user.id });
       res.status(201).json({ listing });
     } catch (err) {
       res.status(500).json({ error: 'Failed to create listing' });
