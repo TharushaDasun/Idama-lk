@@ -108,6 +108,7 @@
           <label>Photos</label>
           <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotoSelect(event)">
           <div class="upload-box" onclick="document.getElementById('photoInput').click()">Tap to upload photos</div>
+          <div id="photoCount" class="photo-count">0 / 8 photos</div>
           <div id="photoPreview" class="photo-preview"></div>
         </div>
         <div id="addListingMsg" class="form-msg hidden"></div>
