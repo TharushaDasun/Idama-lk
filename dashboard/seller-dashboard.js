@@ -152,18 +152,35 @@ function renderPhotoPreview(){
       '<button type="button" class="photo-remove" onclick="removePhoto(' + i + ')">&times;</button>' +
       '</div>';
   }).join('');
+  var counter = document.getElementById('photoCount');
+  if (counter) counter.textContent = uploadedImages.length + ' / ' + MAX_PHOTOS + ' photos';
 }
 function removePhoto(i){
   uploadedImages.splice(i, 1);
   renderPhotoPreview();
 }
 
+var MAX_PHOTOS = 8;
+
 function handlePhotoSelect(event){
   var files = Array.prototype.slice.call(event.target.files || []);
   if (!files.length) return;
   var box = document.querySelector('.upload-box');
   var originalText = box.textContent;
-  box.textContent = 'Uploading ' + files.length + ' photo(s)...';
+
+  var remaining = MAX_PHOTOS - uploadedImages.length;
+  if (remaining <= 0) {
+    box.textContent = 'Maximum ' + MAX_PHOTOS + ' photos — remove one to add another.';
+    setTimeout(function(){ box.textContent = originalText; }, 2500);
+    event.target.value = '';
+    return;
+  }
+  if (files.length > remaining) {
+    files = files.slice(0, remaining);
+    box.textContent = 'Only ' + remaining + ' more photo(s) allowed (max ' + MAX_PHOTOS + ') — uploading those.';
+  } else {
+    box.textContent = 'Uploading ' + files.length + ' photo(s)...';
+  }
 
   var uploads = files.map(function(file){
     var fd = new FormData();
