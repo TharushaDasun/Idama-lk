@@ -52,6 +52,69 @@ function checkSession(){
 }
 document.addEventListener('DOMContentLoaded', checkSession);
 
+// --- Email/password Log in / Sign up (real backend, alongside Google) ---
+function setAuthTab(name){
+  document.getElementById('tabLogin').classList.toggle('active', name === 'login');
+  document.getElementById('tabSignup').classList.toggle('active', name === 'signup');
+  document.getElementById('loginForm').classList.toggle('hidden', name !== 'login');
+  document.getElementById('signupForm').classList.toggle('hidden', name !== 'signup');
+  document.getElementById('loginErrorBox').classList.add('hidden');
+}
+
+function submitLogin(event){
+  event.preventDefault();
+  var btn = document.getElementById('loginSubmitBtn');
+  var box = document.getElementById('loginErrorBox');
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  fetch('/api/auth/login', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, cache: 'no-store',
+    body: JSON.stringify({
+      email: document.getElementById('loginEmail').value,
+      password: document.getElementById('loginPassword').value
+    })
+  })
+    .then(function(r){ return r.json().then(function(data){ return { ok: r.ok, data: data }; }); })
+    .then(function(res){
+      if (!res.ok) {
+        box.textContent = res.data.error || 'Could not log in.';
+        box.classList.remove('hidden');
+        return;
+      }
+      showDashboard(res.data.user);
+    })
+    .catch(function(){ box.textContent = 'Could not reach the server — please try again.'; box.classList.remove('hidden'); })
+    .finally(function(){ btn.disabled = false; btn.textContent = 'Log in'; });
+  return false;
+}
+
+function submitSignup(event){
+  event.preventDefault();
+  var btn = document.getElementById('signupSubmitBtn');
+  var box = document.getElementById('loginErrorBox');
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  fetch('/api/auth/signup', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, cache: 'no-store',
+    body: JSON.stringify({
+      name: document.getElementById('signupName').value,
+      email: document.getElementById('signupEmail').value,
+      phone: document.getElementById('signupPhone').value,
+      password: document.getElementById('signupPassword').value
+    })
+  })
+    .then(function(r){ return r.json().then(function(data){ return { ok: r.ok, data: data }; }); })
+    .then(function(res){
+      if (!res.ok) {
+        box.textContent = res.data.error || 'Could not create account.';
+        box.classList.remove('hidden');
+        return;
+      }
+      showDashboard(res.data.user);
+    })
+    .catch(function(){ box.textContent = 'Could not reach the server — please try again.'; box.classList.remove('hidden'); })
+    .finally(function(){ btn.disabled = false; btn.textContent = 'Create account'; });
+  return false;
+}
+
 function showTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === name); });
   document.querySelectorAll('.panel-section').forEach(function(s){ s.classList.toggle('active', s.id === name); });
